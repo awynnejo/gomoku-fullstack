@@ -7,7 +7,7 @@ dotenv.config();
 
 // Database connection
 const connectDB = async () => {
-    const dbUri = process.env.DB || '';
+    const dbUri = process.env.DBURI || '';
     console.log('Connecting to db...')
     try {
         await mongoose.connect(dbUri);
@@ -50,6 +50,7 @@ app.get('/game/:id', (req: Request, res: Response) => {
 
 app.get('/game/new/:size', (req: Request, res: Response) => {
     var game: Game = new Game(parseInt(req.params.size))
+    res.send(game)
 });
 
 app.post('/game/update/:id', (req: Request, res: Response) => {
