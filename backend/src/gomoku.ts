@@ -20,8 +20,9 @@ export class Game {
     gameover: boolean
     history: HISTORY[]
     game_state: string
+    id: string
 
-    constructor(size: number){
+    constructor(size: number, id: string){
         this.board = new Array(size)
             .fill("VACANT")
             .map(() => new Array(size).fill("VACANT"))
@@ -30,6 +31,7 @@ export class Game {
         this.gameover = false
         this.history = []
         this.game_state = this.turn + "'S TURN'"
+        this.id = "uid-x" // Need to get new id
     }
 
     checkWin(coord: COORDINATES){
@@ -106,17 +108,17 @@ export class Game {
 
 export class GameCanvas {
     // draws game and updates game state
-    size: number
+  // need to draw game from scratch each time
+    game: Game
     canvas: HTMLCanvasElement
     tile_size: number
     ctx: CanvasRenderingContext2D
 
     constructor(
-               canvas: HTMLCanvasElement
+               canvas: HTMLCanvasElement,
+               game: Game
                ){
-
-        this.size = this.getNewGame()
-
+        this.game = game
         this.updateGameStateString()
         this.canvas = canvas
         this.canvas.width = 800
@@ -141,11 +143,13 @@ export class GameCanvas {
         this.tile_size = (this.canvas.getBoundingClientRect().right - this.canvas.getBoundingClientRect().left) / this.game.size
     }
 
-    async getNewGame(){
-        const response: Game = await fetch('http://localhost:8000/game/new/10',{
+    async getGame(id: String){
+        const response: Game = await fetch(`http://localhost:8000/game/new/{id}`,{
             method: 'GET'
         })
-        return response
+        this.game = response
+        this.drawGame()
+
     }
 
 
@@ -188,11 +192,28 @@ export class GameCanvas {
     updateGameStateString(){
 
     }
+    drawGame(game: Game){
+        this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height)
+        // function to iterate through game and draw each tile needed
+      // for x in column{
+        // for x in row {
+            // if black, draw black circle
+        // if white, draw white circle
+      // }
+    }
+    async getNewGame(){
+        const response: Game = await fetch(`http://localhost:8000/game/new/{id}`,{
+            method: 'GET'
+        })
+        this.game = response.id
+        this.drawGame()
+    }
+
+
 
     resetGame(){
-        this.game = new Game(this.game.size)
-        this.game.turn = "BLACK"
-        this.game.gameover = false
+
+        this.game = this.getNewGame()
         this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height)
         this.updateTileSize()
         this.drawBoard()
