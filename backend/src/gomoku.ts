@@ -22,7 +22,7 @@ export class Game {
     game_state: string
     id: string
 
-    constructor(size: number, id: string){
+    constructor(size: number){
         this.board = new Array(size)
             .fill("VACANT")
             .map(() => new Array(size).fill("VACANT"))
@@ -143,14 +143,14 @@ export class GameCanvas {
         this.tile_size = (this.canvas.getBoundingClientRect().right - this.canvas.getBoundingClientRect().left) / this.game.size
     }
 
-    async getGame(id: String){
-        const response: Game = await fetch(`http://localhost:8000/game/new/{id}`,{
-            method: 'GET'
-        })
-        this.game = response
-        this.drawGame()
+    // async getGame(id: String){
+    //     const response: Game = await fetch(`http://localhost:8000/game/new/{id}`,{
+    //         method: 'GET'
+    //     })
+    //     this.game = response
+    //     this.drawGame()
 
-    }
+    // }
 
 
     drawBoard(){
@@ -201,19 +201,19 @@ export class GameCanvas {
         // if white, draw white circle
       // }
     }
-    async getNewGame(){
-        const response: Game = await fetch(`http://localhost:8000/game/new/{id}`,{
-            method: 'GET'
-        })
-        this.game = response.id
-        this.drawGame()
-    }
+    // async getNewGame(){
+    //     const response: Game = await fetch(`http://localhost:8000/game/new/{id}`,{
+    //         method: 'GET'
+    //     })
+    //     this.game = response.id
+    //     this.drawGame()
+    // }
 
 
 
     resetGame(){
 
-        this.game = this.getNewGame()
+        // this.game = this.getNewGame()
         this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height)
         this.updateTileSize()
         this.drawBoard()
