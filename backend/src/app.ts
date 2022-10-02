@@ -5,6 +5,24 @@ import { Game } from './gomoku';
 
 dotenv.config();
 
+// Database connection
+const connectDB = async () => {
+    const dbUri = process.env.DB || '';
+    console.log('Connecting to db...')
+    try {
+        await mongoose.connect(dbUri);
+
+    } catch (error) {
+        console.log(error);
+        process.exit(1);
+    }
+}
+
+connectDB();
+mongoose.connection.once('connected', () => {
+    console.log("connected to db")
+})
+
 const app: Express = express();
 app.use(express.json())
 const port = process.env.PORT;
